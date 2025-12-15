@@ -58,11 +58,12 @@ export const clubs: Clubs[] = [
   },
   {
     id: "8",
-     name: "EMOTICA",
+     name: "VEERRACERS",
     description: "Vice President, Cultural Society",
     image:
-      "https://instagram.fbbi1-2.fna.fbcdn.net/v/t51.2885-19/274265396_420311389892690_7158126738047860431_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fbbi1-2.fna.fbcdn.net&_nc_cat=102&_nc_oc=Q6cZ2QHjS02wcwU4_yEqig_nvp8_CKC4RDIyZSQgZZl9zPqHjy66G36Xb7zki1CdH4_PaamjS3JpX0mNjCv6ImF0RvjX&_nc_ohc=JLxxGVfaOi0Q7kNvwGOhpQ3&_nc_gid=4i8XHTwo4qlNpnM-Tb306g&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AfkuetmWIeGNGni6TKGd39zm4C7u2RDHRiZ3ypfF3MHh2Q&oe=6945930C&_nc_sid=7a9f4b",
+      "https://instagram.fbbi1-1.fna.fbcdn.net/v/t51.2885-19/244389169_1347949959046151_2444994352259049675_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fbbi1-1.fna.fbcdn.net&_nc_cat=111&_nc_oc=Q6cZ2QHAEl5HeWnzkPnvMhHyD_hwCtA1mEsEF65s9xpQ_nX49S_evenju6QDG2Zi4q432wUSABOJA39os6UDm8QaFLXI&_nc_ohc=t7lv3P6TeCwQ7kNvwEYPsKe&_nc_gid=UY5Uhj-vnymaMyw6e8ykyw&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Afk7bKAjNpLotoPMpQNvNncyCOBiiL7kZnLB3bTSmEdmaA&oe=69458B13&_nc_sid=7a9f4b",
   },
+    
    
   {
     id: "9",
@@ -80,10 +81,10 @@ export const clubs: Clubs[] = [
   },
   {
   id: "11",
-   name: "VEERRACERS",
+   name: "EMOTICA",
     description: "Vice President, Cultural Society",
     image:
-      "https://instagram.fbbi1-1.fna.fbcdn.net/v/t51.2885-19/244389169_1347949959046151_2444994352259049675_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fbbi1-1.fna.fbcdn.net&_nc_cat=111&_nc_oc=Q6cZ2QHAEl5HeWnzkPnvMhHyD_hwCtA1mEsEF65s9xpQ_nX49S_evenju6QDG2Zi4q432wUSABOJA39os6UDm8QaFLXI&_nc_ohc=t7lv3P6TeCwQ7kNvwEYPsKe&_nc_gid=UY5Uhj-vnymaMyw6e8ykyw&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Afk7bKAjNpLotoPMpQNvNncyCOBiiL7kZnLB3bTSmEdmaA&oe=69458B13&_nc_sid=7a9f4b",
+      "https://instagram.fbbi1-2.fna.fbcdn.net/v/t51.2885-19/274265396_420311389892690_7158126738047860431_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fbbi1-2.fna.fbcdn.net&_nc_cat=102&_nc_oc=Q6cZ2QHjS02wcwU4_yEqig_nvp8_CKC4RDIyZSQgZZl9zPqHjy66G36Xb7zki1CdH4_PaamjS3JpX0mNjCv6ImF0RvjX&_nc_ohc=JLxxGVfaOi0Q7kNvwGOhpQ3&_nc_gid=4i8XHTwo4qlNpnM-Tb306g&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AfkuetmWIeGNGni6TKGd39zm4C7u2RDHRiZ3ypfF3MHh2Q&oe=6945930C&_nc_sid=7a9f4b",
   },
   {
     id: "12",
