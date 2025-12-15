@@ -7,13 +7,13 @@ export default function Footer() {
     <footer className="bg-black px-6 py-24">
       <div className="mx-auto max-w-7xl">
 
-        {/* MAIN GRADIENT CONTAINER */}
+        
         <div className="rounded-3xl bg-gradient-to-br from-[#0b1022] via-[#070b18] to-[#040611] px-10 py-16 shadow-2xl">
 
-          {/* TOP SECTION */}
+          
           <div className="grid gap-16 lg:grid-cols-2 items-start">
 
-            {/* LEFT SECTION */}
+            
             <div>
               <Image
                 src="/logo.svg"
@@ -33,10 +33,10 @@ export default function Footer() {
               </p>
             </div>
 
-            {/* RIGHT SECTION */}
+            
             <div className="text-zinc-300">
 
-              {/* QUICK LINKS */}
+              
               <h4 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white">
                 Quick Links
               </h4>
@@ -69,7 +69,7 @@ export default function Footer() {
                 </li>
               </ul>
 
-              {/* FOLLOW US */}
+              
               <div className="mt-10">
                 <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
                   Follow Us
@@ -91,10 +91,10 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* DIVIDER */}
+          
           <div className="mt-16 h-px bg-white/10" />
 
-          {/* COPYRIGHT */}
+          
           <p className="mt-6 text-center text-xs text-zinc-500">
             © 2025. All Rights Reserved
           </p>
