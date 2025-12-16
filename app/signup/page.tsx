@@ -172,6 +172,7 @@ export default function SignupPage() {
         gradYear: form.gradYear,
         branch: form.branch,
       };
+      
       await signup(payload);
       alert("Signup successful! Please login.");
       // Optionally redirect to login or homepage
@@ -266,6 +267,7 @@ export default function SignupPage() {
           </p>
 
           {step === 1 && (
+            <>
             <div className="space-y-6">
               {/* Google Sign-Up */}
               <GoogleSignInButton
@@ -490,6 +492,7 @@ export default function SignupPage() {
                 {loading ? "Sending..." : "Send OTP"}
               </button>
             </div>
+            </>
           )}
 
           {step === 2 && (
