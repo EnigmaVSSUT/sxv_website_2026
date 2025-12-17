@@ -5,6 +5,7 @@ import AuthInput from "@/components/AuthInput";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import CustomDropdown from "@/components/CustomDropdown";
 import { sendOTP, signup, googleSignUp } from "@/services/auth";
+import {SignupSchema} from "@/Schemas/signupSchema";
 import Link from "next/link";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -15,6 +16,7 @@ import {
   Roboto_Slab,
   Cormorant_Garamond,
 } from "next/font/google";
+import {motion,AnimatePresence} from "framer-motion";
 
 const prata = Prata({
   subsets: ["latin"],
@@ -252,16 +254,16 @@ export default function SignupPage() {
               </button>
             ))}
           </div>
-          <span className="text-sm text-gray-500">Step {step} of 2</span>
+          <span className="text-sm text-gray-500 cursor-default">Step {step} of 2</span>
         </div>
         <fieldset className="pb-8 px-[20px] md:px-8 pt-3 border-2 border-gray-500 rounded-2xl max-md:mx-[6.5px]">
           <legend
-            className={`text-3xl font-bold ${prata.className} text-center text-white`}
+            className={`text-3xl font-bold ${prata.className} text-center cursor-default text-white`}
           >
             Signup
           </legend>
           <p
-            className={`text-lg text-center ${af.className} text-gray-100 mb-5`}
+            className={`text-lg text-center ${af.className} cursor-default text-gray-100 mb-5`}
           >
             Create your account
           </p>
@@ -284,7 +286,7 @@ export default function SignupPage() {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span
-                    className={`px-[6.5px] ${i_serif.className} bg-black text-gray-200`}
+                    className={`px-[6.5px] ${i_serif.className} cursor-default bg-black text-gray-200`}
                   >
                     Or continue with email
                   </span>
@@ -487,7 +489,7 @@ export default function SignupPage() {
               <button
                 onClick={handleSendOTP}
                 disabled={loading}
-                className="w-full py-3 mt-4 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:bg-emerald-300 transition-colors shadow-sm"
+                className="w-full py-3 mt-4 rounded-lg cursor-pointer bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:bg-emerald-300 transition-colors shadow-sm"
               >
                 {loading ? "Sending..." : "Send OTP"}
               </button>
