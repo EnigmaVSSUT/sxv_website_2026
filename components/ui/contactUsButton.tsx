@@ -7,7 +7,7 @@ export interface ButtonProps
   size?: "default" | "sm" | "lg" | "icon"
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const ContactUsButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "default", ...props }, ref) => {
     return (
       <button
@@ -35,6 +35,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     )
   }
 )
-Button.displayName = "Button"
+ContactUsButton.displayName = "Button"
 
-export { Button }
+export { ContactUsButton }

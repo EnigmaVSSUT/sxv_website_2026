@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { ContactUsButton as ContactUsButton } from '@/components/ui/contactUsButton';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ContactUsCard as ContactUsCard, CardContent, CardHeader, CardTitle } from '@/components/ui/contactUsCard';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 // Simple validation schema
@@ -97,7 +97,7 @@ export default function Page() {
 
           {/* Left Column: Contact Info */}
           <div className="w-full lg:w-5/12 flex flex-col gap-6 order-2 lg:order-1">
-            <Card className="bg-[#E0E5EC] border-none shadow-neu-flat min-h-[600px] sm:min-h-[650px] lg:h-full flex flex-col">
+            <ContactUsCard className="bg-[#E0E5EC] border-none shadow-neu-flat min-h-[600px] sm:min-h-[650px] lg:h-full flex flex-col">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold pl-2 border-l-4 border-[#4A5568] text-[#4A5568]">
                   Get in Touch
@@ -168,12 +168,12 @@ export default function Page() {
                   ></iframe>
                 </div>
               </CardContent>
-            </Card>
+            </ContactUsCard>
           </div>
 
           {/* Right Column: The Form */}
           <div className="w-full lg:w-7/12 order-1 lg:order-2">
-            <Card className="bg-[#E0E5EC] border-none shadow-neu-flat min-h-[600px] sm:min-h-[650px] lg:h-full">
+            <ContactUsCard className="bg-[#E0E5EC] border-none shadow-neu-flat min-h-[600px] sm:min-h-[650px] lg:h-full">
               <CardContent className="p-6 md:p-8 lg:p-12">
                 <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col justify-between">
                   <div className="flex flex-col gap-4">
@@ -283,17 +283,17 @@ export default function Page() {
 
                   {/* Submit Button */}
                   <div className="flex justify-start mt-6">
-                    <Button
+                    <ContactUsButton
                       type="submit"
                       disabled={isSubmitting}
                       className="px-8 py-4 bg-[#E0E5EC] text-[#4A5568] font-bold rounded-2xl shadow-neu-flat hover:bg-[#E0E5EC] hover:text-[#2d3748] active:shadow-neu-pressed active:scale-95 border-none h-auto text-lg disabled:opacity-50"
                     >
                       {isSubmitting ? 'Submitting...' : 'Submit'}
-                    </Button>
+                    </ContactUsButton>
                   </div>
                 </form>
               </CardContent>
-            </Card>
+            </ContactUsCard>
           </div>
 
         </div>
