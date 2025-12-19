@@ -318,7 +318,7 @@ export default function LoginPage() {
               </div>
 
               {error && (
-                <p className="text-red-700 font-bold mt-2">{error}</p>
+                <p className="text-red-700 font-bold mt-2 cursor-default">{error}</p>
               )}
 
               <div className="flex justify-end items-center mt-[3px]">
@@ -354,3 +354,4 @@ export default function LoginPage() {
       </div>
   );
 }
+
