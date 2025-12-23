@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { motion } from 'motion/react'
 import { Menu, X } from 'lucide-react'
 
 type NavbarProps = {
@@ -128,12 +127,73 @@ class Slash {
   }
 }
 
+class BackgroundEffect {
+  width: number
+  height: number
+  kanji: string
+  floatingTexts: Array<{
+    char: string
+    x: number
+    y: number
+    vx: number
+    vy: number
+    size: number
+    opacity: number
+  }>
+
+  constructor(width: number, height: number) {
+    this.width = width
+    this.height = height
+    this.kanji = "風林火山侍魂花鳥風月"
+    this.floatingTexts = []
+    
+    const count = width < 768 ? 5 : 10
+    for(let i = 0; i < count; i++) {
+      this.addText()
+    }
+  }
+
+  addText() {
+    this.floatingTexts.push({
+      char: this.kanji[Math.floor(Math.random() * this.kanji.length)],
+      x: Math.random() * this.width,
+      y: Math.random() * this.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.2,
+      size: Math.random() * 20 + 10,
+      opacity: Math.random() * 0.1
+    })
+  }
+
+  update() {
+    this.floatingTexts.forEach(t => {
+      t.x += t.vx
+      t.y += t.vy
+      if (t.x < 0) t.x = this.width
+      if (t.x > this.width) t.x = 0
+      if (t.y < 0) t.y = this.height
+      if (t.y > this.height) t.y = 0
+    })
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = '#c5a059'
+    ctx.font = '20px "Shippori Mincho"'
+    this.floatingTexts.forEach(t => {
+      ctx.globalAlpha = t.opacity
+      ctx.fillText(t.char, t.x, t.y)
+    })
+    ctx.globalAlpha = 1.0
+  }
+}
+
 export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const slashesRef = useRef<Slash[]>([])
   const animationIdRef = useRef<number>()
+  const bgEffectRef = useRef<BackgroundEffect | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -145,10 +205,16 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
     const resizeCanvas = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
+      bgEffectRef.current = new BackgroundEffect(canvas.width, canvas.height)
     }
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      
+      if (bgEffectRef.current) {
+        bgEffectRef.current.update()
+        bgEffectRef.current.draw(ctx)
+      }
       
       slashesRef.current.forEach(slash => {
         slash.update()
@@ -192,7 +258,11 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
     const startX = rect.left
     const startY = rect.top + (rect.height / 2)
     const isGold = Math.random() > 0.6
-    const color = element.dataset.color || (isGold ? '#fbbf24' : '#e5e5e5')
+    let color = isGold ? '#fbbf24' : '#e5e5e5'
+    
+    if (element.dataset.color) {
+      color = element.dataset.color
+    }
     
     slashesRef.current.push(new Slash(startX, startY, rect.width, color))
   }
@@ -201,48 +271,53 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
     createSlash(event.currentTarget)
   }
 
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen)
+    if (!isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+  }
+
   return (
     <>
       {/* Canvas for effects */}
       <canvas 
         ref={canvasRef}
         className="fixed inset-0 w-full h-full pointer-events-none z-[60]"
+        id="effect-canvas"
       />
       
       {/* Washi Paper Texture Overlay */}
-      <div className="fixed inset-0 w-full h-full pointer-events-none z-50 mix-blend-overlay opacity-40" 
-           style={{
-             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E")`
-           }} />
+      <div className="fixed inset-0 w-full h-full washi-texture z-50 mix-blend-overlay pointer-events-none" />
 
       {/* Navigation Bar */}
-      <nav className="fixed w-full z-40 top-0 transition-all duration-500 bg-neutral-950/95 backdrop-blur-xl border-b border-neutral-800 shadow-lg shadow-black/50">
+      <nav className="fixed w-full z-40 top-0 transition-all duration-500 bg-neutral-950/95 backdrop-blur-xl border-b border-neutral-800 nav-enter shadow-lg shadow-black/50" id="navbar">
         {/* Bottom red accent line */}
-        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#bd0029] to-transparent opacity-100 overflow-hidden z-20">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse" />
-        </div>
+        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#bd0029] to-transparent opacity-100 red-line-sheen overflow-hidden z-20" id="nav-border-glow" />
 
         <div className="max-w-full px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className={`flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-20' : 'h-24'}`}>
+          <div className={`flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-20' : 'h-24'}`} id="nav-container">
             
             {/* Logo Section */}
             <div 
               id="main-logo"
-              className="flex-shrink-0 flex items-center cursor-pointer group"
+              className="flex-shrink-0 flex items-center cursor-pointer group hover-trigger"
               data-color="#bd0029"
               onMouseEnter={handleHover}
             >
               <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center mr-3 md:mr-4">
-                <div className="absolute inset-0 bg-[#bd0029] rounded-full animate-pulse shadow-[0_0_20px_rgba(189,0,41,0.4)]" />
-                <span className="relative text-white font-black text-2xl md:text-3xl z-10 group-hover:scale-110 transition-transform duration-300">
+                <div className="sun-circle absolute inset-0 bg-[#bd0029] rounded-full sun-animate" />
+                <span className="relative text-white font-serif-jp font-black text-2xl md:text-3xl z-10 group-hover:scale-110 transition-transform duration-300">
                   祭
                 </span>
               </div>
               <div className="flex flex-col justify-center items-start leading-tight">
-                <span className="font-black text-sm md:text-lg tracking-[0.1em] uppercase text-white transition-colors duration-300 whitespace-nowrap">
+                <span className="font-serif-jp font-black text-sm md:text-lg tracking-[0.1em] uppercase animate-text-main transition-colors duration-300 whitespace-nowrap">
                   SAMAVESH
                 </span>
-                <span className="font-black text-sm md:text-lg tracking-[0.1em] uppercase text-white transition-colors duration-300 whitespace-nowrap">
+                <span className="font-serif-jp font-black text-sm md:text-lg tracking-[0.1em] uppercase animate-text-main transition-colors duration-300 whitespace-nowrap">
                   x VASSAUNT
                 </span>
               </div>
@@ -254,10 +329,10 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
                 <Link 
                   key={id}
                   href={item.href}
-                  className="relative px-3 py-2 font-bold text-sm text-neutral-300 hover:text-amber-400 transition-colors duration-200 group"
+                  className="katana-link hover-trigger font-shippori font-bold text-sm text-neutral-300"
                   onMouseEnter={handleHover}
                 >
-                  <span className="block text-[0.6rem] text-red-600 opacity-70 mb-[-2px]">
+                  <span className="block text-[0.6rem] text-red-600 font-serif-jp opacity-70 mb-[-2px]">
                     {item.japanese}
                   </span>
                   {item.label.toUpperCase()}
@@ -269,32 +344,30 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
             <div className="hidden lg:flex items-center space-x-3 pl-4 border-l border-neutral-800 ml-4">
               <Link 
                 href="/login"
-                className="relative px-8 py-2 border border-neutral-600 hover:border-neutral-400 bg-black/40 transition-all duration-300 group flex flex-col items-center justify-center min-w-[100px]"
+                className="relative px-8 py-2 border border-neutral-600 hover:border-neutral-400 bg-black/40 transition-all duration-300 clip-path-slant group hover-trigger flex flex-col items-center justify-center min-w-[100px]"
                 data-color="#fbbf24"
                 onMouseEnter={handleHover}
-                style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}
               >
-                <span className="font-bold text-neutral-300 group-hover:text-amber-400 text-sm tracking-widest">
+                <span className="font-serif-jp font-bold text-neutral-300 group-hover:text-amber-400 text-sm tracking-widest">
                   LOGIN
                 </span>
-                <span className="text-[0.5rem] text-neutral-600 group-hover:text-amber-400/70 transition-colors">
+                <span className="text-[0.5rem] font-serif-jp text-neutral-600 group-hover:text-amber-400/70 transition-colors">
                   入
                 </span>
               </Link>
 
               <Link 
                 href="/signup"
-                className="relative px-8 py-2 bg-[#bd0029] hover:bg-red-800 transition-all duration-300 group overflow-hidden flex flex-col items-center justify-center min-w-[120px]"
+                className="relative px-8 py-2 bg-[#bd0029] hover:bg-red-800 transition-all duration-300 clip-path-slant group overflow-hidden hover-trigger flex flex-col items-center justify-center min-w-[120px]"
                 data-color="#ffffff"
                 onMouseEnter={handleHover}
-                style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}
               >
                 <div className="absolute inset-0 bg-white translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out z-0 skew-x-[-20deg]" />
                 <div className="relative z-10 flex flex-col items-center">
-                  <span className="font-bold text-white group-hover:text-black text-sm tracking-widest">
+                  <span className="font-serif-jp font-bold text-white group-hover:text-black text-sm tracking-widest">
                     REGISTER
                   </span>
-                  <span className="text-[0.5rem] text-black/50 group-hover:text-red-600">
+                  <span className="text-[0.5rem] font-serif-jp text-black/50 group-hover:text-red-600">
                     登録
                   </span>
                 </div>
@@ -304,8 +377,9 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center">
               <button 
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white hover:text-[#bd0029] focus:outline-none transition-colors p-2 z-50 relative"
+                onClick={handleMenuToggle}
+                className="text-white hover:text-[#bd0029] focus:outline-none transition-colors p-2 flash-red z-50 relative"
+                id="mobile-menu-btn"
               >
                 {isMenuOpen ? (
                   <X className="w-8 h-8 stroke-[2] stroke-[#bd0029]" />
@@ -319,43 +393,57 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 bg-neutral-950 z-30 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] flex flex-col pt-24 overflow-y-auto ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div 
+        className={`fixed inset-0 bg-neutral-950 z-30 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] flex flex-col pt-24 overflow-y-auto no-scrollbar ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        id="mobile-menu"
+      >
         <div className="flex flex-col md:flex-row h-full">
           <div className="flex-1 flex flex-col items-center md:items-start justify-center space-y-6 md:pl-20 py-10">
             {navItems.map((item, id) => (
               <Link 
                 key={id}
                 href={item.href}
-                className="group relative flex items-center w-full md:w-auto justify-center md:justify-start"
-                onClick={() => setIsMenuOpen(false)}
+                className="group relative flex items-center mobile-link hover-trigger w-full md:w-auto justify-center md:justify-start animate-menu-item"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  document.body.style.overflow = ''
+                }}
                 onMouseEnter={handleHover}
                 style={{ animationDelay: `${0.05 * (id + 1)}s` }}
               >
                 <div className="text-right mr-4 hidden md:block">
-                  <span className="block text-xs text-[#bd0029] tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="block text-xs text-[#bd0029] font-sans-jp tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     {item.japanese}
                   </span>
                 </div>
-                <span className="font-black text-4xl sm:text-5xl text-neutral-600 hover:text-white transition-all duration-300 uppercase tracking-tighter hover:translate-x-4">
+                <span className="font-serif-jp font-black text-4xl sm:text-5xl text-neutral-600 hover:text-white transition-all duration-300 uppercase tracking-tighter hover:translate-x-4">
                   {item.label}
                 </span>
               </Link>
             ))}
 
-            <div className="w-24 h-[1px] bg-neutral-800 my-4" />
+            <div className="w-24 h-[1px] bg-neutral-800 my-4 mobile-link animate-menu-item" style={{ animationDelay: '0.3s' }} />
 
-            <div className="flex space-x-4 px-6 md:px-0 w-full md:w-auto justify-center md:justify-start">
+            <div className="flex space-x-4 mobile-link px-6 md:px-0 w-full md:w-auto justify-center md:justify-start animate-menu-item" style={{ animationDelay: '0.35s' }}>
               <Link 
                 href="/login"
-                className="px-8 py-3 border border-stone-600 text-stone-300 text-center hover:bg-stone-800 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
+                className="px-8 py-3 border border-stone-600 text-stone-300 font-shippori text-center hover:bg-stone-800 transition-colors hover-trigger"
+                data-color="#fbbf24"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  document.body.style.overflow = ''
+                }}
               >
                 LOGIN
               </Link>
               <Link 
                 href="/signup"
-                className="px-8 py-3 bg-[#bd0029] text-white text-center hover:bg-red-800 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
+                className="px-8 py-3 bg-[#bd0029] text-white font-shippori text-center hover:bg-red-800 transition-colors hover-trigger"
+                data-color="#ffffff"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  document.body.style.overflow = ''
+                }}
               >
                 REGISTER
               </Link>
@@ -364,15 +452,17 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
 
           {/* Decorative Side Panel */}
           <div className="hidden lg:flex w-1/3 h-full border-l border-neutral-800 bg-neutral-900 flex-col justify-end p-10 pb-32 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay" 
-                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=2070&auto=format&fit=crop')" }} />
+            <div 
+              className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay" 
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=2070&auto=format&fit=crop')" }}
+            />
             <div className="relative z-10">
               <div className="w-20 h-20 bg-[#bd0029] rounded-full mb-8 shadow-[0_0_30px_rgba(189,0,41,0.4)] flex items-center justify-center">
-                <span className="text-white text-4xl font-bold">祭</span>
+                <span className="text-white font-serif-jp text-4xl font-bold">祭</span>
               </div>
-              <h3 className="text-4xl font-black mb-4 text-white">文化祭</h3>
+              <h3 className="font-serif-jp text-4xl font-black mb-4 text-white">文化祭</h3>
               <div className="w-12 h-1 bg-[#bd0029] mb-6" />
-              <p className="text-neutral-400 text-sm leading-relaxed">
+              <p className="text-neutral-400 text-sm leading-relaxed font-sans-jp">
                 Samavesh x Vassaunt<br />
                 Where tradition meets the future.
               </p>

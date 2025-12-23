@@ -259,6 +259,42 @@ body {
   scrollbar-width: none; 
 }
 
+/* Washi Texture */
+.washi-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Katana Link Styling */
+.katana-link {
+  position: relative;
+  padding: 8px 12px;
+  transition: color 0.2s ease;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.katana-link:hover {
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+/* Clip path for slanted buttons */
+.clip-path-slant {
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+}
+
+/* Flash effect */
+.flash-red { 
+  transition: background-color 0.1s; 
+}
+
+.flash-red:active { 
+  background-color: #bd0029; 
+  color: white; 
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
