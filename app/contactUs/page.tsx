@@ -147,16 +147,14 @@ export default function Page() {
       <div className="absolute top-0 left-0 right-0 h-1 bg-neutral-800 shadow-md z-10"></div>
 
       {/* Lantern Columns */}
-      <div className="fixed top-0 left-4 md:left-12 h-screen flex flex-col items-center gap-12 z-20 hidden sm:flex pointer-events-none">
+      <div className="absolute top-0 left-4 md:left-12 h-screen flex flex-col items-center gap-12 z-20 hidden sm:flex pointer-events-none">
         <FestivalLantern text="御" delay={0.2} swingDuration={3.5} />
         <FestivalLantern text="縁" delay={1.2} swingDuration={4.2} />
-        <FestivalLantern text="福" delay={0.5} swingDuration={3.8} />
       </div>
 
-      <div className="fixed top-0 right-4 md:right-12 h-screen flex flex-col items-center gap-12 z-20 hidden sm:flex pointer-events-none">
+      <div className="absolute top-0 right-4 md:right-12 h-screen flex flex-col items-center gap-12 z-20 hidden sm:flex pointer-events-none">
         <FestivalLantern text="歓" delay={0.7} swingDuration={4.0} />
         <FestivalLantern text="迎" delay={1.5} swingDuration={3.2} />
-        <FestivalLantern text="光" delay={0.1} swingDuration={3.6} />
       </div>
 
       {/* Main Content Area */}

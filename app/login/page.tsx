@@ -70,24 +70,23 @@ const LanternSVG = () => (
 // --- Animation Variants ---
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.6, ease: "easeOut" }
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
   },
 };
 
 // Subtle swaying for lanterns
 const lanternSway = {
-    animate: {
-        rotate: [-2, 2, -2],
-        transition: {
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut"
-        }
-    }
-}
+  animate: {
+    rotate: [-2, 2, -2],
+    transition: {
+      duration: 6,
+      repeat: Infinity,
+    },
+  },
+};
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
