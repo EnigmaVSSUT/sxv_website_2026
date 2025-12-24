@@ -45,7 +45,7 @@ export default function Footer({ className = "" }: FooterProps) {
             
             <div className="glitch-wrapper inline-block w-fit">
               <h2 
-                className="text-4xl font-black text-white font-['Orbitron'] tracking-tighter glitch-text" 
+                className="text-2xl  lg:text-3xl font-black text-white font-['Orbitron'] tracking-tighter glitch-text" 
                 data-text="SAMAVESHxVASSAUNT"
               >
                 SAMAVESH<span className="text-[var(--shrine-red)]">x</span>VASSAUNT

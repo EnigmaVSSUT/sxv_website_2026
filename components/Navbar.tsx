@@ -192,7 +192,7 @@ export default function Navbar({ isLoggedIn = false, onSignOut }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const slashesRef = useRef<Slash[]>([])
-  const animationIdRef = useRef<number>()
+  const animationIdRef = useRef<number>(null)
   const bgEffectRef = useRef<BackgroundEffect | null>(null)
 
   useEffect(() => {
