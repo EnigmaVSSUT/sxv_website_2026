@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Clock, MapPin, Calendar, ChevronDown, Zap, Theater, Gamepad2, Sparkles, X } from 'lucide-react';
-import eventsData from "@/events-temp.json";
 import { EventItems } from "@/types/Event";
+import { eventService } from "@/services/eventService";
+import { transformBackendEventToFrontend, getUniqueCategories, getUniqueDays } from "@/utils/eventTransformer";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type ScrollOption = { id: string; label?: string; icon?: React.ComponentType<any> };
 type StyledEvent = EventItems & { image: string; japaneseTitle: string };
@@ -14,24 +16,6 @@ const CATEGORY_ICONS: Record<string, any> = {
   "E-Sports": Gamepad2,
   Fun: Sparkles,
 };
-
-const CATEGORIES: ScrollOption[] = (eventsData.eventMeta?.categories || []).map((cat) => ({
-  id: cat,
-  icon: CATEGORY_ICONS[cat] || Sparkles,
-  label: cat,
-}));
-
-const DAYS = eventsData.eventMeta?.days || Array.from(new Set(eventsData.events.map((event) => event.day)));
-
-const EVENTS_DATA: StyledEvent[] = eventsData.events.map(
-  (event: EventItems & { image?: string; japaneseTitle?: string }) => ({
-    ...event,
-    image:
-      event.image ||
-      "https://placehold.co/600x400/050000/050000?text=SxV",
-    japaneseTitle: event.japaneseTitle || event.title,
-  })
-);
 
 const GlitchHeader = () => {
   const [text, setText] = useState("EVENTS");
@@ -179,10 +163,91 @@ const EventCard = ({ event }: { event: StyledEvent }) => {
 };
 
 const App = () => {
-  const [activeDay, setActiveDay] = useState(DAYS[0] || "Day 1");
-  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]?.id || "Technical");
+  const [eventsData, setEventsData] = useState<StyledEvent[]>([]);
+  const [categories, setCategories] = useState<ScrollOption[]>([]);
+  const [days, setDays] = useState<string[]>([]);
+  const [activeDay, setActiveDay] = useState<string>("");
+  const [activeCategory, setActiveCategory] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredEvents = EVENTS_DATA.filter(event => event.day === activeDay && event.category === activeCategory);
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await eventService.getAllEvents();
+        
+        if (!response.events || response.events.length === 0) {
+          setError("No events found. Please check back later.");
+          return;
+        }
+        
+        // Transform backend events to frontend format
+        const transformedEvents = response.events.map(transformBackendEventToFrontend);
+        setEventsData(transformedEvents);
+        
+        // Extract unique categories and days
+        const uniqueCategories = getUniqueCategories(transformedEvents);
+        const uniqueDays = getUniqueDays(transformedEvents);
+        
+        // Set categories with icons
+        const categoriesWithIcons = uniqueCategories.map((cat) => ({
+          id: cat,
+          icon: CATEGORY_ICONS[cat] || Sparkles,
+          label: cat,
+        }));
+        
+        setCategories(categoriesWithIcons);
+        setDays(uniqueDays);
+        
+        // Set initial active selections
+        if (uniqueDays.length > 0) setActiveDay(uniqueDays[0]);
+        if (uniqueCategories.length > 0) setActiveCategory(uniqueCategories[0]);
+        
+      } catch (err: any) {
+        console.error("Failed to fetch events:", err);
+        const errorMessage = err.response?.data?.message || err.message || "Failed to load events. Please try again later.";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const filteredEvents = eventsData.filter(event => 
+    event.day === activeDay && event.category === activeCategory
+  );
+
+  const retryFetch = () => {
+    setError(null);
+    setLoading(true);
+    // Re-trigger the useEffect by updating a dependency
+    window.location.reload();
+  };
+
+  if (loading) {
+    return <LoadingSpinner message="Loading Events..." />;
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#020202] flex items-center justify-center">
+        <div className="text-center">
+          <X className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <p className="text-red-500 font-cinzel mb-4">{error}</p>
+          <button 
+            onClick={retryFetch} 
+            className="px-4 py-2 bg-red-900/20 border border-red-900 text-red-500 font-cinzel hover:bg-red-900/40 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#020202] overflow-x-hidden font-sans text-gray-100 selection:bg-red-900 pb-20">
@@ -213,8 +278,8 @@ const App = () => {
         <GlitchHeader />
 
         <div className="w-full flex justify-center gap-4 mb-12 z-40">
-             <ScrollSelector title="Timeline" options={DAYS} selected={activeDay} onSelect={setActiveDay} />
-             <ScrollSelector title="Protocol" options={CATEGORIES} selected={activeCategory} onSelect={setActiveCategory} type="icon" />
+             <ScrollSelector title="Timeline" options={days} selected={activeDay} onSelect={setActiveDay} />
+             <ScrollSelector title="Protocol" options={categories} selected={activeCategory} onSelect={setActiveCategory} type="icon" />
         </div>
 
         <div className="w-full max-w-6xl min-h-[50vh]">
