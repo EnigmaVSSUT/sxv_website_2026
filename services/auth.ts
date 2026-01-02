@@ -1,6 +1,6 @@
 import api from "@/utils/api";
 
-export const sendOTP = (data: { email: string }) => api.post("/api/auth/sendOTP", data);
+export const sendOTP = (data: { email: string }) => api.post("api/auth/sendOTP", data);
 
 export const signup = (data: {
   name: string;
@@ -11,18 +11,40 @@ export const signup = (data: {
   institution?: string;
   gradYear?: string;
   branch?: string;
-}) => api.post("/api/auth/signup", data);
+}) => api.post("api/auth/signup", data);
 
 export const login = (data: { email: string; password: string }) =>
-  api.post("/api/auth/login", data);
+  api.post("api/auth/login", data);
 
-export const googleSignIn = (data: { credential: string }) =>
-  api.post("/auth/google", data);
+export const verifyOTP = (data:{email:string,otp:string})=>api.post("api/auth/verifyOTP",data);
 
-export const googleSignUp = (data: { 
-  credential: string; 
-  phone?: string;
-  institution?: string;
-  gradYear?: string;
-  branch?: string;
-}) => api.post("/auth/google/signup", data);
+export const verifyEmail = (data:{email:string})=>api.post("api/password/forgotpassword",data);
+
+export const forgotPassword = (data:{email:string})=>api.post("api/password/changepassword",data);
+
+export const logout = async () => {
+  try {
+    // If you have a logout endpoint on your backend, call it
+    // await api.post("api/auth/logout");
+    
+    // Clear token from localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    
+    // Clear axios default headers
+    delete api.defaults.headers.common['Authorization'];
+    
+    return Promise.resolve();
+  } catch (error) {
+    // Even if the API call fails, we should still clear local data
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    delete api.defaults.headers.common['Authorization'];
+    
+    return Promise.resolve();
+  }
+};
