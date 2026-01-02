@@ -187,14 +187,16 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const [hasLoggedIn, setHasLoggedIn] = useState<boolean>(false)
+  const [mounted, setMounted] = useState<boolean>(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const slashesRef = useRef<Slash[]>([])
   const animationIdRef = useRef<number>(null)
   const bgEffectRef = useRef<BackgroundEffect | null>(null)
   const { isLoggedIn, logout, user, loading } = useAuth()
 
-  // Check if user has logged in before
+  // Check if user has logged in before - only after component mounts
   useEffect(() => {
+    setMounted(true);
     const hasLoggedInFlag = localStorage.getItem('hasLoggedIn');
     if (hasLoggedInFlag === 'true') {
       setHasLoggedIn(true);
@@ -348,7 +350,7 @@ export default function Navbar() {
 
             {/* Login / Register / Logout Section (Desktop) */}
             <div className="hidden lg:flex items-center space-x-3 pl-4 border-l border-neutral-800 ml-4">
-              {loading ? (
+              {loading || !mounted ? (
                 <div className="px-8 py-2 text-neutral-400 text-sm font-serif-jp">
                   Loading...
                 </div>
@@ -414,6 +416,12 @@ export default function Navbar() {
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center">
+              {/* Show user name on mobile navbar when logged in */}
+              {isLoggedIn && mounted && (
+                <span className="text-neutral-300 text-sm font-serif-jp mr-4 hidden sm:block">
+                  {user?.name}
+                </span>
+              )}
               <button 
                 onClick={handleMenuToggle}
                 className="text-white hover:text-[#bd0029] focus:outline-none transition-colors p-2 flash-red z-50 relative"
@@ -463,32 +471,37 @@ export default function Navbar() {
             <div className="w-24 h-[1px] bg-neutral-800 my-4 mobile-link animate-menu-item" style={{ animationDelay: '0.3s' }} />
 
             <div className="flex flex-col space-y-4 mobile-link px-6 md:px-0 w-full md:w-auto justify-center md:justify-start animate-menu-item" style={{ animationDelay: '0.35s' }}>
-              {loading ? (
+              {loading || !mounted ? (
                 <div className="text-neutral-400 text-sm font-serif-jp text-center">
                   Loading...
                 </div>
               ) : isLoggedIn ? (
                 <>
-                  <span className="text-neutral-400 text-sm font-serif-jp text-center">
-                    Welcome, {user?.name}
-                  </span>
+                  <div className="text-center mb-4">
+                    <span className="text-neutral-300 text-lg font-serif-jp block mb-2">
+                      Welcome,
+                    </span>
+                    <span className="text-white text-xl font-serif-jp font-bold">
+                      {user?.name}
+                    </span>
+                  </div>
                   <button 
                     onClick={() => {
                       logout()
                       setIsMenuOpen(false)
                       document.body.style.overflow = ''
                     }}
-                    className="px-8 py-3 bg-[#bd0029] text-white font-shippori text-center hover:bg-red-800 transition-colors hover-trigger"
+                    className="px-8 py-3 bg-[#bd0029] text-white font-shippori text-center hover:bg-red-800 transition-colors hover-trigger w-full"
                     data-color="#ffffff"
                   >
                     LOGOUT
                   </button>
                 </>
               ) : (
-                <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4 w-full">
                   <Link 
                     href="/login"
-                    className="px-8 py-3 border border-stone-600 text-stone-300 font-shippori text-center hover:bg-stone-800 transition-colors hover-trigger"
+                    className="px-8 py-3 border border-stone-600 text-stone-300 font-shippori text-center hover:bg-stone-800 transition-colors hover-trigger w-full"
                     data-color="#fbbf24"
                     onClick={() => {
                       setIsMenuOpen(false)
@@ -500,7 +513,7 @@ export default function Navbar() {
                   {!hasLoggedIn && (
                     <Link 
                       href="/signup"
-                      className="px-8 py-3 bg-[#bd0029] text-white font-shippori text-center hover:bg-red-800 transition-colors hover-trigger"
+                      className="px-8 py-3 bg-[#bd0029] text-white font-shippori text-center hover:bg-red-800 transition-colors hover-trigger w-full"
                       data-color="#ffffff"
                       onClick={() => {
                         setIsMenuOpen(false)

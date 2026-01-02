@@ -177,11 +177,13 @@ export default function SignupPage() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const { login: authLogin } = useAuth();
 
-  // Redirect if user has already logged in before
+  // Redirect if user has already logged in before - only after component mounts
   useEffect(() => {
-    const hasLoggedInFlag = localStorage.getItem('hasLoggedIn');
-    if (hasLoggedInFlag === 'true' && mounted) {
-      window.location.href = "/login";
+    if (mounted) {
+      const hasLoggedInFlag = localStorage.getItem('hasLoggedIn');
+      if (hasLoggedInFlag === 'true') {
+        window.location.href = "/login";
+      }
     }
   }, [mounted]);
 
