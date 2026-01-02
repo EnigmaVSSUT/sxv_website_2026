@@ -6,7 +6,7 @@ import EventsSlider from "@/components/EventsSlider";
 export default function Home() {
   return (
     <>
-      {/* Hero Section with Background */}
+      {/* Hero Section with Background  */}
       <section className="relative min-h-screen">
         <GlitchBackground>
           <div className={styles.main}>
