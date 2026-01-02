@@ -14,8 +14,8 @@ export async function POST(req: Request) {
     });
 
     await transporter.sendMail({
-      from: `"SXV Website Contact" <${process.env.MAIL_USER}>`,
-      to: "arnvk71@gmail.com",
+      from: `"SXV Website Contact" ${email}`,
+      to: `${process.env.MAIL_USER}`,
       replyTo: email,
       subject: `New Contact Message from ${name}`,
       html: `
