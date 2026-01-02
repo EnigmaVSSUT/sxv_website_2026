@@ -129,7 +129,7 @@ export default function ClubModal({ club, isOpen, onClose }: ClubModalProps) {
           {/* Header with club image */}
           <div className="relative h-48 overflow-hidden border-b-4 border-[#8b5a2b]">
             <Image
-              src={club.image || "public/placeholder-1.png"}
+              src={club.image || "/placeholder-1.png"}
               alt={club.name}
               fill
               className="object-cover brightness-75"
