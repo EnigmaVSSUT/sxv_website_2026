@@ -1,12 +1,22 @@
 /* ========================= */
-/* IMPORT YOZAKURA REGULAR   */
+/* YOZAKURA FONT (NORMAL + BOLD) */
 /* ========================= */
 
 @font-face {
-  font-family: 'Yozakura Regular';
+  font-family: 'Yozakura';
   src: url('/fonts/YOZAKURA-Regular.woff2') format('woff2'),
        url('/fonts/YOZAKURA-Regular.woff') format('woff');
-  font-weight: normal;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Synthetic bold using same font file */
+@font-face {
+  font-family: 'Yozakura';
+  src: url('/fonts/YOZAKURA-Regular.woff2') format('woff2'),
+       url('/fonts/YOZAKURA-Regular.woff') format('woff');
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -19,20 +29,20 @@
   position: relative;
   z-index: 3;
   width: 100%;
+  height: 100vh;
+
   padding: 0 80px;
-  color: white;
-  text-align: center;
+  padding-top: 200px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;  /* Changed from center to flex-start */
-  height: 100vh;
-  padding-top: 200px;           /* Added padding to move content up from top */
-  font-family: 'Yozakura Regular', 'Orbitron', 'Rajdhani', monospace, serif; /* Default font for all content */
-}
+  justify-content: flex-start;
 
-.hero {
-  padding-top: 120px;
+  color: white;
+  text-align: center;
+
+  font-family: 'Yozakura', 'Orbitron', 'Rajdhani', monospace, serif;
 }
 
 /* ========================= */
@@ -48,7 +58,7 @@
 }
 
 /* ========================= */
-/* TEXT BASE STYLES          */
+/* TITLE TEXT (JP + EN)      */
 /* ========================= */
 
 .glitchTitle,
@@ -56,37 +66,45 @@
   font-size: 64px;
   line-height: 1.05;
   margin: 0;
+
   display: flex;
   justify-content: center;
   gap: 0.02em;
-  font-family: 'Yozakura Regular', 'Orbitron', 'Rajdhani', monospace, serif; /* Ensure custom font is used */
-  font-weight: normal;
+
+  font-family: 'Yozakura', 'Orbitron', 'Rajdhani', monospace, serif;
+  font-weight: 900; /* 🔥 Bold for both Japanese & English */
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+/* ========================= */
+/* PARAGRAPH TEXT            */
+/* ========================= */
 
 .glitchPara {
   margin-top: 26px;
   max-width: 520px;
+
   font-size: 16px;
   line-height: 1.6;
   opacity: 0.75;
-  font-family: 'Rajdhani', system-ui, sans-serif; /* Use Rajdhani for paragraph */
+
+  font-family: 'Rajdhani', system-ui, sans-serif;
+  font-weight: 400;
 }
 
 /* ========================= */
-/* ENGLISH FONT (YOZAKURA)   */
+/* ENGLISH MODE (OPTIONAL)   */
 /* ========================= */
 
 .englishFont .glitchTitle,
 .englishFont .glitchX {
-  font-family: 'Yozakura Regular', 'Orbitron', 'Rajdhani', monospace, serif;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-weight: normal;
+  font-family: 'Yozakura', 'Orbitron', 'Rajdhani', monospace, serif;
+  font-weight: 900;
+  letter-spacing: 0.12em;
 }
 
-/* Paragraph stays readable */
+/* Paragraph remains readable */
 .englishFont .glitchPara {
   font-family: 'Rajdhani', system-ui, sans-serif;
   letter-spacing: 0.05em;
@@ -98,7 +116,7 @@
 
 .fontLoading .glitchTitle,
 .fontLoading .glitchX {
-  visibility: hidden; /* Hide until font loads to prevent flash */
+  visibility: hidden;
 }
 
 .fontLoaded .glitchTitle,
@@ -117,7 +135,7 @@
 }
 
 /* ========================= */
-/* PER-LETTER GLITCH         */
+/* PER-LETTER GLITCH SUPPORT */
 /* ========================= */
 
 .char {
@@ -125,13 +143,12 @@
   position: relative;
 }
 
-/* Active glitch letters */
 .char.glitch {
   animation: charJitter 0.08s steps(2) infinite;
 }
 
 /* ========================= */
-/* KEYFRAMES                 */
+/* GLITCH KEYFRAMES          */
 /* ========================= */
 
 @keyframes charJitter {
@@ -144,13 +161,13 @@
 }
 
 /* ========================= */
-/* MOBILE                    */
+/* RESPONSIVE                */
 /* ========================= */
 
 @media (max-width: 768px) {
   .content {
     padding: 0 24px;
-    padding-top: 160px;  /* Adjusted for mobile */
+    padding-top: 160px;
   }
 
   .glitchTitle,
@@ -166,7 +183,7 @@
 @media (max-width: 420px) {
   .content {
     padding: 0 16px;
-    padding-top: 140px;  /* Adjusted for small mobile */
+    padding-top: 140px;
   }
 
   .glitchTitle,

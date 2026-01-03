@@ -2,87 +2,185 @@
 
 import React, { useState, useEffect } from 'react';
 
+interface ParticleType {
+  x: number;
+  y: number;
+  color: string;
+  vx: number;
+  vy: number;
+  gravity: number;
+  drag: number;
+  size: number;
+  rotation: number;
+  rotationSpeed: number;
+  life: number;
+  decay: number;
+  update(): void;
+  draw(ctx: CanvasRenderingContext2D): void;
+}
+
 export default function PinnacleReveal() {
   const [isRevealed, setIsRevealed] = useState(false);
 
-  const handleReveal = () => {
-    if (isRevealed) return;
-    setIsRevealed(true);
-
-    // Create particle explosion for celebration
-    createExplosion();
-  };
-
   const createExplosion = () => {
-    // Enhanced celebratory particle effect
-    const container = document.getElementById('pinnacle-container');
+    const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    // Get the center of the revealed image
+    const container = document.getElementById('card-container');
     if (!container) return;
 
-    const colors = ['#ff4655', '#8b7355', '#c92a2a', '#ffffff', '#0f1923', '#c5a059'];
     const rect = container.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-    // Create more particles for celebration
-    for (let i = 0; i < 50; i++) {
-      const particle = document.createElement('div');
-      particle.style.position = 'fixed';
-      particle.style.left = rect.left + rect.width / 2 + 'px';
-      particle.style.top = rect.top + rect.height / 2 + 'px';
-      particle.style.width = Math.random() * 8 + 4 + 'px';
-      particle.style.height = Math.random() * 12 + 6 + 'px';
-      particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      particle.style.pointerEvents = 'none';
-      particle.style.zIndex = '1000';
-      particle.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      
-      // More varied explosion angles for celebration
-      const angle = (Math.PI * 2 * i) / 50 + (Math.random() - 0.5) * 0.5;
-      const speed = Math.random() * 20 + 15;
-      const vx = Math.cos(angle) * speed;
-      const vy = Math.sin(angle) * speed;
-      
-      document.body.appendChild(particle);
-      
-      let x = rect.left + rect.width / 2;
-      let y = rect.top + rect.height / 2;
-      let velocityX = vx;
-      let velocityY = vy;
-      let life = 1.0;
-      let rotation = 0;
-      
-      const animate = () => {
-        velocityX *= 0.98;
-        velocityY *= 0.98;
-        velocityY += 0.3; // Reduced gravity for longer float
-        x += velocityX;
-        y += velocityY;
-        life -= 0.015; // Slower fade for longer celebration
-        rotation += 5;
+    // Colors: White, Red, Brown, and deeper/lighter shades
+    const colors = [
+      '#ffffff', // White
+      '#e0e0e0', // Light Grey/White
+      '#ff4655', // Bright Red
+      '#8a1c1c', // Deep Red
+      '#8b7355', // Bronze/Brown
+      '#5d4037', // Deep Brown
+      '#c5a059'  // Gold/Light Brown
+    ];
+
+    const particles: ParticleType[] = [];
+
+    class Particle implements ParticleType {
+      x: number;
+      y: number;
+      color: string;
+      vx: number;
+      vy: number;
+      gravity: number;
+      drag: number;
+      size: number;
+      rotation: number;
+      rotationSpeed: number;
+      life: number;
+      decay: number;
+
+      constructor(x: number, y: number, color: string) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
         
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
-        particle.style.opacity = life.toString();
-        particle.style.transform = `rotate(${rotation}deg) scale(${life})`;
+        // Spread particles in all directions from center
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 15 + 10;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
         
-        if (life > 0) {
-          requestAnimationFrame(animate);
-        } else {
-          document.body.removeChild(particle);
-        }
-      };
+        this.gravity = 0.15;
+        this.drag = 0.98;
+        this.size = Math.random() * 8 + 4;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 10;
+        this.life = 1.0;
+        this.decay = Math.random() * 0.008 + 0.003;
+      }
+
+      update() {
+        this.vx *= this.drag;
+        this.vy *= this.drag;
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.rotation += this.rotationSpeed;
+        this.life -= this.decay;
+      }
+
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation * Math.PI / 180);
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size * 1.5);
+        ctx.restore();
+      }
+    }
+
+    // Create particles from center of image spreading in all directions
+    for(let i = 0; i < 200; i++) {
+      particles.push(new Particle(centerX, centerY, colors[Math.floor(Math.random() * colors.length)]));
+    }
+
+    const animateParticles = () => {
+      if (particles.length === 0) return;
       
-      setTimeout(() => animate(), i * 10);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw(ctx);
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      
+      if (particles.length > 0) {
+        requestAnimationFrame(animateParticles);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    };
+
+    animateParticles();
+  };
+
+  const handleClick = () => {
+    if (isRevealed) {
+      // Celebration logic if already revealed
+      createExplosion();
+      return;
+    }
+
+    setIsRevealed(true);
+
+    // Hide prompts
+    const prompt = document.querySelector('.click-prompt') as HTMLElement;
+    if (prompt) {
+      prompt.style.opacity = '0';
+    }
+
+    // Trigger Reveal Classes
+    document.body.classList.add('reveal-active');
+    const container = document.getElementById('card-container');
+    if (container) {
+      container.classList.add('reveal-active');
+    }
+
+    // Initial celebration
+    setTimeout(() => {
+      createExplosion();
+    }, 100);
+  };
+
+  // Resize Canvas
+  const resizeCanvas = () => {
+    const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
   };
+
+  useEffect(() => {
+    resizeCanvas();
+    const handleResize = () => resizeCanvas();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Orbitron:wght@400;700;900&family=Shojumaru&display=swap');
-        
         :root {
           --color-crimson: #ff4655;
           --color-obsidian: #0f1923;
-          --color-vermilion: #c92a2a;
+          --color-vermilion: #7a1515;
           --color-bronze: #8b7355;
           --color-gold: #c5a059;
         }
@@ -91,16 +189,12 @@ export default function PinnacleReveal() {
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
         .font-noto { font-family: 'Noto Serif JP', serif; }
 
-        .side-neon {
-          display: none;
-        }
-
         .stage-container {
           position: relative;
-          width: 85%;
-          max-width: 450px;
-          height: 55vh;
-          max-height: 550px;
+          width: 90%;
+          max-width: 480px;
+          height: 60vh;
+          max-height: 600px;
           perspective: 1200px;
           cursor: pointer;
           padding-top: 20px;
@@ -171,12 +265,18 @@ export default function PinnacleReveal() {
           opacity: 1;
         }
 
-        .guest-name {
-          font-size: 3rem;
-        }
+        .guest-name { font-size: 3rem; }
+        .guest-role { font-size: 1.25rem; }
 
-        .guest-role {
-          font-size: 1.25rem;
+        .agent-intel {
+          font-size: 0.8rem;
+          color: #888;
+          margin-top: 10px;
+          border-left: 2px solid var(--color-crimson);
+          padding-left: 10px;
+          max-width: 80%;
+          line-height: 1.4;
+          opacity: 0.8;
         }
 
         .layer-gate {
@@ -194,15 +294,11 @@ export default function PinnacleReveal() {
           height: 100%;
           transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
           will-change: transform;
+          pointer-events: auto;
         }
 
-        .gate-left {
-          transform-origin: center left;
-        }
-
-        .gate-right {
-          transform-origin: center right;
-        }
+        .gate-left { transform-origin: center left; }
+        .gate-right { transform-origin: center right; }
 
         .reveal-active .gate-left {
           transform: translateX(-95%) rotateY(-25deg);
@@ -473,17 +569,70 @@ export default function PinnacleReveal() {
           white-space: nowrap;
         }
 
-        .flash-overlay {
+        #particle-canvas {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 50;
+        }
+
+        .side-deco {
           display: none;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%) scale(0.8);
+          height: 55vh;
+          width: 80px;
+          z-index: 15;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .side-deco.left { left: 3%; }
+        .side-deco.right { right: 3%; }
+
+        .reveal-active .side-deco {
+          opacity: 1;
+          transform: translateY(-50%) scale(1);
+          transition-delay: 0.3s;
+        }
+
+        .neon-sword-container {
+          position: relative;
+          width: 32px;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .neon-katana {
+          fill: none;
+          stroke: var(--color-crimson);
+          stroke-width: 2;
+          filter: drop-shadow(0 0 5px var(--color-crimson)) drop-shadow(0 0 10px var(--color-crimson));
+          height: 100%;
+          width: 100%;
+          overflow: visible;
+        }
+
+        .neon-katana path {
+          vector-effect: non-scaling-stroke;
+        }
+
+        .deco-glow {
+          animation: pulse-sword 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse-sword {
+          0%, 100% { filter: drop-shadow(0 0 5px var(--color-crimson)); stroke-opacity: 0.6; }
+          50% { filter: drop-shadow(0 0 15px var(--color-crimson)) drop-shadow(0 0 30px var(--color-vermilion)); stroke-opacity: 1; }
         }
 
         @media (max-width: 640px) {
-          .stage-container {
-            width: 90%;
-            max-width: 380px;
-            height: 50vh;
-            max-height: 480px;
-          }
           .nuki-text { font-size: 1.8rem; }
           .banner-col { font-size: 1.5rem; padding: 6px 3px; }
           .guest-name { font-size: 2.25rem; }
@@ -495,26 +644,74 @@ export default function PinnacleReveal() {
           .gate-right .banner-col { left: 10px; }
           .agent-text { font-size: 1.2rem; }
         }
+
+        @media (min-width: 1024px) {
+          .side-deco { display: flex; }
+        }
       `}</style>
 
-      <section className="relative py-16 bg-black flex items-center justify-center overflow-hidden">
-        {/* Dark fade overlay at top for smooth transition */}
-        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black to-transparent z-5"></div>
+      <section className="relative py-8 bg-black flex items-center justify-center overflow-hidden">
+        {/* SIDE DECORATIONS (Visible on Laptop/Desktop) - Positioned relative to section */}
+        {/* Left Katana */}
+        <div className="side-deco left">
+          <div className="neon-sword-container">
+            <svg className="neon-katana deco-glow" viewBox="0 0 50 400" preserveAspectRatio="none">
+              {/* Handle */}
+              <rect x="20" y="320" width="10" height="80" fill="#111" stroke="var(--color-crimson)" strokeWidth="2" />
+              <defs>
+                <pattern id="handle-pattern-left" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <line x1="0" y1="0" x2="10" y2="10" stroke="#333" strokeWidth="1" />
+                  <line x1="10" y1="0" x2="0" y2="10" stroke="#333" strokeWidth="1" />
+                </pattern>
+              </defs>
+              <rect x="20" y="320" width="10" height="80" fill="url(#handle-pattern-left)" fillOpacity="0.5" />
+              {/* Tsuba (Guard) */}
+              <rect x="10" y="315" width="30" height="5" fill="#111" stroke="var(--color-crimson)" />
+              {/* Blade */}
+              <path d="M22 315 L22 20 Q 25 0 28 20 L28 315 Z" fill="rgba(255, 70, 85, 0.1)" stroke="var(--color-crimson)" strokeWidth="2" />
+              {/* Decorative Kanji inside blade area (abstract) */}
+              <path d="M25 50 L25 250" stroke="var(--color-crimson)" strokeWidth="1" strokeDasharray="5,5" opacity="0.5" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Right Katana */}
+        <div className="side-deco right">
+          <div className="neon-sword-container">
+            <svg className="neon-katana deco-glow" viewBox="0 0 50 400" preserveAspectRatio="none">
+              {/* Handle */}
+              <rect x="20" y="320" width="10" height="80" fill="#111" stroke="var(--color-crimson)" strokeWidth="2" />
+              <defs>
+                <pattern id="handle-pattern-right" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <line x1="0" y1="0" x2="10" y2="10" stroke="#333" strokeWidth="1" />
+                  <line x1="10" y1="0" x2="0" y2="10" stroke="#333" strokeWidth="1" />
+                </pattern>
+              </defs>
+              <rect x="20" y="320" width="10" height="80" fill="url(#handle-pattern-right)" fillOpacity="0.5" />
+              {/* Tsuba (Guard) */}
+              <rect x="10" y="315" width="30" height="5" fill="#111" stroke="var(--color-crimson)" />
+              {/* Blade */}
+              <path d="M22 315 L22 20 Q 25 0 28 20 L28 315 Z" fill="rgba(255, 70, 85, 0.1)" stroke="var(--color-crimson)" strokeWidth="2" />
+              {/* Decorative Kanji inside blade area (abstract) */}
+              <path d="M25 50 L25 250" stroke="var(--color-crimson)" strokeWidth="1" strokeDasharray="5,5" opacity="0.5" />
+            </svg>
+          </div>
+        </div>
+
         {/* Valorant FX Layers */}
         <div className="shockwave"></div>
-        <div className={`agent-detected-overlay ${isRevealed ? 'reveal-active' : ''}`}>
+        <div className="agent-detected-overlay">
           <div className="agent-text-bg">
             <span className="agent-text">IDENTITY CONFIRMED</span>
           </div>
         </div>
 
+        {/* Particle Canvas Layer */}
+        <canvas id="particle-canvas"></canvas>
+
         {/* Container is now the click trigger */}
-        <div 
-          className="stage-container" 
-          id="pinnacle-container"
-          onClick={handleReveal}
-        >
-          <div className={`reveal-card ${isRevealed ? 'reveal-active' : ''}`}>
+        <div className="stage-container" id="card-container" onClick={handleClick}>
+          <div className="reveal-card">
             {/* BACK FACE (REVEAL) */}
             <div className="layer-reveal">
               <img 
@@ -523,8 +720,6 @@ export default function PinnacleReveal() {
                 className="guest-image"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
-              
-              {/* Decorative scanlines */}
               <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
                 backgroundImage: `url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhZWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==")`
               }}></div>
@@ -537,8 +732,7 @@ export default function PinnacleReveal() {
                   <span className="text-xs tracking-widest uppercase font-orbitron">Authorized Access</span>
                 </div>
                 <h2 className="guest-name text-white font-shoju leading-none mb-2">Kitsune</h2>
-                <h3 className="guest-role text-gray-300 font-orbitron uppercase tracking-widest">Master Duelist</h3>
-                <div className="absolute bottom-4 right-4 text-red-500/30 text-6xl font-black font-orbitron opacity-20">01</div>
+                <h3 className="guest-role text-gray-300 font-orbitron uppercase tracking-widest">Playback Singer</h3>
               </div>
             </div>
 
