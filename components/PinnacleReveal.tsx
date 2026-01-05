@@ -610,8 +610,8 @@ export default function PinnacleReveal() {
           position: absolute;
           top: 50%;
           transform: translateY(-50%) scale(0.8);
-          height: 55vh;
-          width: 80px;
+          height: 45vh;
+          width: 65px;
           z-index: 15;
           flex-direction: column;
           align-items: center;
@@ -631,7 +631,7 @@ export default function PinnacleReveal() {
 
         .neon-sword-container {
           position: relative;
-          width: 32px;
+          width: 26px;
           height: 100%;
           display: flex;
           flex-direction: column;
@@ -732,7 +732,7 @@ export default function PinnacleReveal() {
         {!hasBeenRevealed && (
           <div className="agent-detected-overlay">
             <div className="agent-text-bg">
-              <span className="agent-text">IDENTITY CONFIRMED</span>
+              <span className="agent-text">CLICK TO REVEAL</span>
             </div>
           </div>
         )}
