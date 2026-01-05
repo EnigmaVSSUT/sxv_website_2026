@@ -21,6 +21,7 @@ interface ParticleType {
 
 export default function PinnacleReveal() {
   const [isRevealed, setIsRevealed] = useState(false);
+  const [hasBeenRevealed, setHasBeenRevealed] = useState(false);
 
   const createExplosion = () => {
     const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
@@ -138,18 +139,38 @@ export default function PinnacleReveal() {
     }
 
     setIsRevealed(true);
+    
+    // Only set hasBeenRevealed and show identity confirmation on first reveal
+    if (!hasBeenRevealed) {
+      setHasBeenRevealed(true);
+      
+      // Trigger Reveal Classes with first-reveal class
+      document.body.classList.add('reveal-active', 'first-reveal');
+      const container = document.getElementById('card-container');
+      if (container) {
+        container.classList.add('reveal-active', 'first-reveal');
+      }
+      
+      // Remove first-reveal class after animation
+      setTimeout(() => {
+        document.body.classList.remove('first-reveal');
+        if (container) {
+          container.classList.remove('first-reveal');
+        }
+      }, 2500);
+    } else {
+      // Just add reveal-active for subsequent reveals
+      document.body.classList.add('reveal-active');
+      const container = document.getElementById('card-container');
+      if (container) {
+        container.classList.add('reveal-active');
+      }
+    }
 
     // Hide prompts
     const prompt = document.querySelector('.click-prompt') as HTMLElement;
     if (prompt) {
       prompt.style.opacity = '0';
-    }
-
-    // Trigger Reveal Classes
-    document.body.classList.add('reveal-active');
-    const container = document.getElementById('card-container');
-    if (container) {
-      container.classList.add('reveal-active');
     }
 
     // Initial celebration
@@ -529,6 +550,10 @@ export default function PinnacleReveal() {
         }
 
         .reveal-active .agent-detected-overlay {
+          animation: none;
+        }
+
+        .reveal-active.first-reveal .agent-detected-overlay {
           animation: overlay-sequence 2s forwards;
         }
 
@@ -551,6 +576,10 @@ export default function PinnacleReveal() {
         }
 
         .reveal-active .agent-text-bg {
+          animation: none;
+        }
+
+        .reveal-active.first-reveal .agent-text-bg {
           animation: slam-text 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
@@ -700,11 +729,13 @@ export default function PinnacleReveal() {
 
         {/* Valorant FX Layers */}
         <div className="shockwave"></div>
-        <div className="agent-detected-overlay">
-          <div className="agent-text-bg">
-            <span className="agent-text">IDENTITY CONFIRMED</span>
+        {!hasBeenRevealed && (
+          <div className="agent-detected-overlay">
+            <div className="agent-text-bg">
+              <span className="agent-text">IDENTITY CONFIRMED</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Particle Canvas Layer */}
         <canvas id="particle-canvas"></canvas>
@@ -775,9 +806,9 @@ export default function PinnacleReveal() {
               </div>
 
               {/* Visual Prompt */}
-              {!isRevealed && (
+              {!hasBeenRevealed && (
                 <div className="click-prompt">
-                  <span className="click-prompt-text">[ CLICK TO REVEAL ]</span>
+                  <span className="click-prompt-text">[ INITIALIZE PROTOCOL ]</span>
                 </div>
               )}
             </div>
