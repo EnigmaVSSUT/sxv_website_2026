@@ -21,7 +21,21 @@ interface ParticleType {
 
 export default function PinnacleReveal() {
   const [isRevealed, setIsRevealed] = useState(false);
-  const [hasBeenRevealed, setHasBeenRevealed] = useState(false);
+  const [showIdentityConfirmed, setShowIdentityConfirmed] = useState(false);
+
+  // Load state from sessionStorage on mount (persists during navigation, not on reload)
+  useEffect(() => {
+    const savedState = sessionStorage.getItem('pinnacleRevealed');
+    if (savedState === 'true') {
+      setIsRevealed(true);
+      // Apply the reveal-active class to body
+      document.body.classList.add('reveal-active');
+      const container = document.getElementById('card-container');
+      if (container) {
+        container.classList.add('reveal-active');
+      }
+    }
+  }, []);
 
   const createExplosion = () => {
     const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
@@ -139,33 +153,25 @@ export default function PinnacleReveal() {
     }
 
     setIsRevealed(true);
+    setShowIdentityConfirmed(true);
     
-    // Only set hasBeenRevealed and show identity confirmation on first reveal
-    if (!hasBeenRevealed) {
-      setHasBeenRevealed(true);
-      
-      // Trigger Reveal Classes with first-reveal class
-      document.body.classList.add('reveal-active', 'first-reveal');
-      const container = document.getElementById('card-container');
-      if (container) {
-        container.classList.add('reveal-active', 'first-reveal');
-      }
-      
-      // Remove first-reveal class after animation
-      setTimeout(() => {
-        document.body.classList.remove('first-reveal');
-        if (container) {
-          container.classList.remove('first-reveal');
-        }
-      }, 2500);
-    } else {
-      // Just add reveal-active for subsequent reveals
-      document.body.classList.add('reveal-active');
-      const container = document.getElementById('card-container');
-      if (container) {
-        container.classList.add('reveal-active');
-      }
+    // Save to sessionStorage (persists during navigation, cleared on page reload)
+    sessionStorage.setItem('pinnacleRevealed', 'true');
+    
+    // Trigger Reveal Classes with first-reveal class
+    document.body.classList.add('reveal-active', 'first-reveal');
+    const container = document.getElementById('card-container');
+    if (container) {
+      container.classList.add('reveal-active', 'first-reveal');
     }
+    
+    // Remove first-reveal class after animation
+    setTimeout(() => {
+      document.body.classList.remove('first-reveal');
+      if (container) {
+        container.classList.remove('first-reveal');
+      }
+    }, 2500);
 
     // Hide prompts
     const prompt = document.querySelector('.click-prompt') as HTMLElement;
@@ -729,10 +735,10 @@ export default function PinnacleReveal() {
 
         {/* Valorant FX Layers */}
         <div className="shockwave"></div>
-        {!hasBeenRevealed && (
+        {showIdentityConfirmed && (
           <div className="agent-detected-overlay">
             <div className="agent-text-bg">
-              <span className="agent-text">CLICK TO REVEAL</span>
+              <span className="agent-text">IDENTITY CONFIRMED</span>
             </div>
           </div>
         )}
@@ -746,7 +752,7 @@ export default function PinnacleReveal() {
             {/* BACK FACE (REVEAL) */}
             <div className="layer-reveal">
               <img 
-                src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=1000&auto=format&fit=crop" 
+                src="https://i.dailymail.co.uk/1s/2019/08/16/09/17349002-7360425-Interesting_childhood_Ash_explained_I_always_felt_my_life_was_ve-a-18_1565945120906.jpg" 
                 alt="Guest Reveal" 
                 className="guest-image"
               />
@@ -762,7 +768,7 @@ export default function PinnacleReveal() {
                   </svg>
                   <span className="text-xs tracking-widest uppercase font-orbitron">Authorized Access</span>
                 </div>
-                <h2 className="guest-name text-white font-shoju leading-none mb-2">Kitsune</h2>
+                <h2 className="guest-name text-white font-shoju leading-none mb-2">Ash King</h2>
                 <h3 className="guest-role text-gray-300 font-orbitron uppercase tracking-widest">Playback Singer</h3>
               </div>
             </div>
@@ -806,9 +812,9 @@ export default function PinnacleReveal() {
               </div>
 
               {/* Visual Prompt */}
-              {!hasBeenRevealed && (
+              {!isRevealed && (
                 <div className="click-prompt">
-                  <span className="click-prompt-text">[ INITIALIZE PROTOCOL ]</span>
+                  <span className="click-prompt-text">[ CLICK TO REVEAL ]</span>
                 </div>
               )}
             </div>
