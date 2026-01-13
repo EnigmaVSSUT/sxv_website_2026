@@ -170,26 +170,26 @@ export default function Page() {
       </div>
 
       {/* Main Content Area */}
-      <div className="relative z-10 flex items-center justify-center py-20 px-4 sm:px-24">
-        <div className="w-full max-w-4xl grid md:grid-cols-5 gap-0 bg-neutral-900/80 backdrop-blur-sm shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-neutral-800 rounded-sm">
+      <div className="relative z-10 flex items-center justify-center py-20 px-4 sm:px-6 md:px-24">
+        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-5 gap-0 bg-neutral-900/80 backdrop-blur-sm shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-neutral-800 rounded-sm mx-auto">
           
           {/* Left Panel: Info (Black & Gold Theme) */}
-          <div className="md:col-span-2 bg-black border-r border-neutral-800 p-10 flex flex-col justify-between relative group">
+          <div className="md:col-span-2 bg-black border-r-0 md:border-r border-neutral-800 p-6 sm:p-8 md:p-10 flex flex-col justify-between relative group">
             {/* Decorative Red Circle */}
             <div className="absolute -top-12 -left-12 w-48 h-48 bg-red-700 rounded-full blur-[80px] opacity-20 group-hover:opacity-30 transition-opacity duration-700"></div>
             
             <div>
-              <h2 className="text-4xl font-japanese-serif font-bold text-white mb-2 tracking-widest">
+              <h2 className="text-3xl sm:text-4xl font-japanese-serif font-bold text-white mb-2 tracking-widest">
                 <span className="text-red-600 block text-lg mb-2 tracking-[0.3em] uppercase opacity-80 font-sans">Contact</span>
                 お問い合わせ
               </h2>
-              <div className="h-1 w-20 bg-red-700 mb-10"></div>
+              <div className="h-1 w-20 bg-red-700 mb-8 sm:mb-10"></div>
               
-              <p className="text-neutral-400 mb-12 font-japanese-serif leading-loose text-sm">
+              <p className="text-neutral-400 mb-8 sm:mb-12 font-japanese-serif leading-loose text-sm">
                 We bridge tradition and modernity. Reach out to us for collaborations, inquiries, or just to say hello under the lanterns light.
               </p>
 
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 <div className="flex items-center space-x-4 text-neutral-300 group/item hover:text-red-500 transition-colors cursor-pointer">
                   <div className="w-10 h-10 border border-neutral-700 bg-neutral-900 flex items-center justify-center rounded-sm group-hover/item:border-red-700 transition-colors">
                     <MapPin size={18} />
@@ -223,19 +223,19 @@ export default function Page() {
             </div>
 
             {/* Bottom Kanji Watermark */}
-            <div className="absolute bottom-[-20px] right-[-20px] text-[150px] font-japanese-serif text-neutral-800 opacity-20 pointer-events-none select-none">
+            <div className="absolute bottom-[-20px] right-[-20px] text-[120px] sm:text-[150px] font-japanese-serif text-neutral-800 opacity-20 pointer-events-none select-none">
               和
             </div>
           </div>
 
           {/* Right Panel: Form (Red Accents) */}
-          <div className="md:col-span-3 p-10 md:p-14 bg-neutral-900 relative">
-            <h3 className="text-2xl font-japanese-serif text-white mb-8 flex items-center">
-              <span className="w-2 h-8 bg-red-600 mr-4"></span>
+          <div className="md:col-span-3 p-6 sm:p-8 md:p-10 lg:p-14 bg-neutral-900 relative">
+            <h3 className="text-xl sm:text-2xl font-japanese-serif text-white mb-6 sm:mb-8 flex items-center">
+              <span className="w-2 h-6 sm:h-8 bg-red-600 mr-4"></span>
               Send Message
             </h3>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
               <div className="group relative">
                 <Input
                   type="text"
@@ -297,11 +297,11 @@ export default function Page() {
                 <ContactUsButton
                   type="submit"
                   disabled={isSubmitting}
-                  className={`group relative overflow-hidden w-full md:w-auto px-10 py-4 bg-white text-black font-bold tracking-widest transition-all duration-500 hover:bg-red-700 hover:text-white border-0 rounded-none disabled:opacity-50 ${
+                  className={`group relative overflow-hidden w-full px-6 sm:px-10 py-3 sm:py-4 bg-white text-black font-bold tracking-widest transition-all duration-500 hover:bg-red-700 hover:text-white border-0 rounded-none disabled:opacity-50 ${
                     isSubmitted ? 'bg-red-700 text-white' : ''
                   }`}
                 >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-sm sm:text-base">
                     {isSubmitting ? 'SUBMITTING...' : isSubmitted ? 'SUBMITTED' : 'SEND MESSAGE'}
                     {!isSubmitting && !isSubmitted && <Send size={16} className="group-hover:translate-x-1 transition-transform" />}
                   </span>

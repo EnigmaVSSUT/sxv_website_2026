@@ -62,11 +62,12 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
   } else {
     return (
       <Stack
-        direction="row"
-        spacing={{ xs: 1, md: 2 }}
-        justifyContent="center"
-        alignItems="flex-start"
-      >
+  direction="row"
+  spacing={{ xs: 1, md: 2 }}
+  justifyContent="center"
+  alignItems="baseline"
+>
+
         <Stack alignItems="center" sx={{ width: { xs: "70px", md: "90px" } }}>
           <Typography
             sx={{
@@ -82,20 +83,22 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
             days
           </Typography>
         </Stack>
-        
-        <Typography
-          sx={{
-            fontFamily: "Orbitron, monospace",
-            fontSize: { xs: "35px", md: "50px" },
-            color: "#F7A802",
-            fontWeight: "bold",
-            marginTop: { xs: "22px", md: "35px" },
-            marginX: { xs: "8px", md: "12px" }
-          }}
-        >
-          :
-        </Typography>
-        
+
+        <Box sx={{ display: "flex", alignItems: "baseline" }}>
+  <Typography
+    sx={{
+      fontFamily: "Orbitron, monospace",
+      fontSize: { xs: "35px", md: "50px" },
+      color: "#F7A802",
+      fontWeight: "bold",
+      lineHeight: 1,
+    }}
+  >
+    :
+  </Typography>
+</Box>
+
+
         <Stack alignItems="center" sx={{ width: { xs: "70px", md: "90px" } }}>
           <Typography
             sx={{
@@ -111,20 +114,22 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
             hours
           </Typography>
         </Stack>
-        
-        <Typography
-          sx={{
-            fontFamily: "Orbitron, monospace",
-            fontSize: { xs: "35px", md: "50px" },
-            color: "#F7A802",
-            fontWeight: "bold",
-            marginTop: { xs: "22px", md: "35px" },
-            marginX: { xs: "8px", md: "12px" }
-          }}
-        >
-          :
-        </Typography>
-        
+
+        <Box sx={{ display: "flex", alignItems: "baseline" }}>
+  <Typography
+    sx={{
+      fontFamily: "Orbitron, monospace",
+      fontSize: { xs: "35px", md: "50px" },
+      color: "#F7A802",
+      fontWeight: "bold",
+      lineHeight: 1,
+    }}
+  >
+    :
+  </Typography>
+</Box>
+
+
         <Stack alignItems="center" sx={{ width: { xs: "70px", md: "90px" } }}>
           <Typography
             sx={{
@@ -140,20 +145,22 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
             mins
           </Typography>
         </Stack>
-        
-        <Typography
-          sx={{
-            fontFamily: "Orbitron, monospace",
-            fontSize: { xs: "35px", md: "50px" },
-            color: "#F7A802",
-            fontWeight: "bold",
-            marginTop: { xs: "22px", md: "35px" },
-            marginX: { xs: "8px", md: "12px" }
-          }}
-        >
-          :
-        </Typography>
-        
+
+        <Box sx={{ display: "flex", alignItems: "baseline" }}>
+  <Typography
+    sx={{
+      fontFamily: "Orbitron, monospace",
+      fontSize: { xs: "35px", md: "50px" },
+      color: "#F7A802",
+      fontWeight: "bold",
+      lineHeight: 1,
+    }}
+  >
+    :
+  </Typography>
+</Box>
+
+
         <Stack alignItems="center" sx={{ width: { xs: "70px", md: "90px" } }}>
           <Typography
             sx={{
