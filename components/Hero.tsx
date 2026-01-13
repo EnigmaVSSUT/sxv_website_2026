@@ -89,7 +89,7 @@ export default function Hero() {
         </div>
         <div className={styles.subtitleContainer}>
           <div className={styles.subtitle}>
-            THE TECHNO CULTURAL FEST VSSUT, BURLA
+            THE TECHNO CULTURAL FEST OF VSSUT, BURLA
           </div>
         </div>
         <div className={styles.timerContainer}>
