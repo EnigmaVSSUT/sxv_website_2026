@@ -52,6 +52,7 @@ const BRANCHES = [
 ];
 
 const YEARS = [
+  { value: "2030", label: "2030" },
   { value: "2029", label: "2029" },
   { value: "2028", label: "2028" },
   { value: "2027", label: "2027" },
@@ -210,6 +211,8 @@ export default function SignupPage() {
   const [passwordErr, setpassworderr] = useState<string>("");
   const [phoneError, setPhoneError] = useState<boolean | string>("");
   const [phoneErr, setPhoneErr] = useState<string>("");
+  const [regdNoError, setRegdNoError] = useState<boolean | string>("");
+  const [regdNoErr, setRegdNoErr] = useState<string>("");
   const [otpError,setOtpError]=useState<string | boolean>("");
   const [otpErr,setOtpErr]=useState<string>("");
 
@@ -217,7 +220,7 @@ export default function SignupPage() {
     name: "",
     email: "",
     phone: "",
-    institution: "vssut",
+    regdNo: "",
     gradYear: YEARS[0].value,
     branch: BRANCHES[0].value,
     otp: "",
@@ -229,6 +232,7 @@ export default function SignupPage() {
     name: "",
     email: "",
     phone: "",
+    regdNo: "",
     otp: "",
     password: "",
     confirmPassword: "",
@@ -307,11 +311,22 @@ export default function SignupPage() {
     }
   };
 
+  const validateRegdNo = () => {
+    const res = SignupSchemaStep1.shape.regdNo.safeParse(form.regdNo);
+    if (!res.success) {
+      setRegdNoError(false);
+      setRegdNoErr(res.error.issues[0].message);
+    } else {
+      setRegdNoError(true);
+    }
+  };
+
   const handleSendOTP = async () => {
     const res = SignupSchemaStep1.safeParse({
       name: form.name,
       email: form.email,
       phone: form.phone,
+      regdNo: form.regdNo,
     });
     if (!res.success) {
       const emailInValid = res.error.issues.find(
@@ -322,6 +337,9 @@ export default function SignupPage() {
       );
       const phoneInValid = res.error.issues.find(
         (issue) => issue.path[0] === "phone"
+      );
+      const regdNoInValid = res.error.issues.find(
+        (issue) => issue.path[0] === "regdNo"
       );
       if (emailInValid) {
         setEmailError(false);
@@ -334,6 +352,10 @@ export default function SignupPage() {
       if (phoneInValid) {
         setPhoneError(false);
         setPhoneErr(phoneInValid.message);
+      }
+      if (regdNoInValid) {
+        setRegdNoError(false);
+        setRegdNoErr(regdNoInValid.message);
       }
       return;
     }
@@ -808,39 +830,30 @@ export default function SignupPage() {
                     </AnimatePresence>
                   </div>
 
-                  {/* Institution - Styled Radio/Tiles */}
-                  <div>
-                    <label className="block text-xs font-cinzel text-[#a8a29e] mb-2 uppercase tracking-wide">
-                      Institution
-                    </label>
-                    <div className="flex gap-4">
-                      {[
-                        { value: "vssut", label: "VSSUT" },
-                        { value: "non_vssut", label: "Non-VSSUT" },
-                      ].map((inst) => (
-                        <label
-                          key={inst.value}
-                          className={`flex-1 flex items-center justify-center py-3 px-4 border rounded-sm cursor-pointer transition-all duration-300 font-cinzel text-sm
-                      ${
-                        form.institution === inst.value
-                          ? "border-[#dc2626] bg-[#dc2626]/10 text-[#dc2626] shadow-[0_0_10px_rgba(220,38,38,0.2)]"
-                          : "border-[#44403c] text-[#78716c] hover:border-[#7f1d1d]"
-                      }`}
+                  {/* Registration Number */}
+                  <div className="relative">
+                    <TextField
+                      label="Registration Number"
+                      value={form.regdNo}
+                      onChange={(e) =>
+                        setForm({ ...form, regdNo: e.target.value })
+                      }
+                      sx={textFieldStyles(regdNoError)}
+                      onBlur={validateRegdNo}
+                      placeholder="Enter 10-digit registration number"
+                    />
+                    <AnimatePresence>
+                      {!regdNoError && regdNoErr && (
+                        <motion.p
+                          initial={{ opacity: 0, height:0 }}
+                          animate={{ opacity: 1, height:"auto" }}
+                          exit={{ opacity: 0,height:0 }}
+                          className="text-red-500 text-xs mt-1 font-noto font-bold tracking-wide pl-1"
                         >
-                          <input
-                            type="radio"
-                            name="institution"
-                            value={inst.value}
-                            checked={form.institution === inst.value}
-                            onChange={(e) =>
-                              setForm({ ...form, institution: e.target.value })
-                            }
-                            className="hidden"
-                          />
-                          {inst.label}
-                        </label>
-                      ))}
-                    </div>
+                          {regdNoErr}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   </div>
 
                   {/* Dropdowns - Row */}
