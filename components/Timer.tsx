@@ -33,7 +33,7 @@ const Completionist = () => (
           right: "60px",
           fontSize: { xs: "40px", md: "60px" },
           color: "#f7a802",
-          fontWeight: { xs: "400", md: "400" },
+          fontWeight: { xs: "700", md: "900" },
           marginLeft: { xs: "35px", md: "50px" },
         }}
       >
