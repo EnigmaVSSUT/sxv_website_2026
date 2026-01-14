@@ -7,32 +7,32 @@ import { ArrowRight, ArrowLeft } from 'lucide-react';
 const EVENTS_DATA = [
   {
     id: 1,
-    title: "TECH FEST",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
+    title: "COMING SOON",
+    image: "/comingsoon.png",
     color: "#4ade80" // Greenish
   },
   {
     id: 2,
-    title: "CULTURAL NIGHT",
-    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=800&auto=format&fit=crop",
+    title: "COMING SOON",
+    image: "/comingsoon.png",
     color: "#f472b6" // Pinkish
   },
   {
     id: 3,
-    title: "HACKATHON",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=800&auto=format&fit=crop",
+    title: "COMING SOON",
+    image: "/comingsoon.png",
     color: "#facc15" // Yellowish
   },
   {
     id: 4,
-    title: "SPORTS MEET",
-    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=800&auto=format&fit=crop",
+    title: "COMING SOON",
+    image: "/comingsoon.png",
     color: "#fb923c" // Orangeish
   },
   {
     id: 5,
-    title: "CODEBID",
-    image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=800&auto=format&fit=crop",
+    title: "COMING SOON",
+    image: "/comingsoon.png",
     color: "#60a5fa" // Blueish
   }
 ];
