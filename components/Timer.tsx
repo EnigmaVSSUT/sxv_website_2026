@@ -79,7 +79,7 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
           >
             {zeroPad(days)}
           </Typography>
-          <Typography id="sub" style={{ color: "#818181", fontSize: "14px" }}>
+          <Typography id="sub" style={{ color: "#FFFFFF", fontSize: "14px" }}>
             days
           </Typography>
         </Stack>
@@ -110,7 +110,7 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
           >
             {zeroPad(hours)}
           </Typography>
-          <Typography id="sub" style={{ color: "#818181", fontSize: "14px" }}>
+          <Typography id="sub" style={{ color: "#FFFFFF", fontSize: "14px" }}>
             hours
           </Typography>
         </Stack>
@@ -141,7 +141,7 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
           >
             {zeroPad(minutes)}
           </Typography>
-          <Typography id="sub" style={{ color: "#818181", fontSize: "14px" }}>
+          <Typography id="sub" style={{ color: "#FFFFFF", fontSize: "14px" }}>
             mins
           </Typography>
         </Stack>
@@ -172,7 +172,7 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
           >
             {zeroPad(seconds)}
           </Typography>
-          <Typography id="sub" style={{ color: "#818181", fontSize: "14px" }}>
+          <Typography id="sub" style={{ color: "#FFFFFF", fontSize: "14px" }}>
             sec
           </Typography>
         </Stack>
@@ -210,7 +210,7 @@ const Timer = () => {
             </Server>
             <Client>
               <Countdown
-                date={new Date("2026-01-16T00:00:00Z").getTime() - 19800000}
+                date={new Date("2026-01-16T00:00:00Z").getTime() }
                 renderer={renderer}
               />
             </Client>
