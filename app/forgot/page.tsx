@@ -289,6 +289,9 @@ export default function ForgotPage() {
       setEmailConfirmation(true);
       setOtpConfirmation(false);
       setStep(1);
+    } else if (emailConfirmation) {
+      // Navigate to previous page when on step 1
+      router.back();
     }
   };
 
@@ -793,20 +796,7 @@ export default function ForgotPage() {
                 <div className="flex md:gap-4 gap-2 pt-2">
                   <button
                     type="button"
-                    className={`flex-1 py-3 border ${
-                      emailConfirmation
-                        ? "border-[#57534e]"
-                        : "border-[#44403c]"
-                    } rounded-sm text-sm font-cinzel text-[#a8a29e] ${
-                      emailConfirmation
-                        ? "cursor-not-allowed"
-                        : "cursor-pointer"
-                    } ${
-                      emailConfirmation ? "text-[#78716c]" : "text-[#a8a29e]"
-                    } ${!emailConfirmation ? "hover:border-[#d6d3d1]" : ""} ${
-                      !emailConfirmation ? "hover:text-[#d6d3d1]" : ""
-                    } transition-colors`}
-                    disabled={emailConfirmation}
+                    className={`flex-1 py-3 border cursor-pointer border-[#44403c] rounded-sm text-sm font-cinzel text-[#a8a29e] hover:border-[#d6d3d1] hover:text-[#d6d3d1] transition-colors`}
                     onClick={backButton}
                   >
                     BACK
